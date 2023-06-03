@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Portfolio - Meriaux Lucas</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../style.css">
+    </head>
+
+    <body>
+
+        <header>
+            <h1>Portfolio</h1>
+            <p>Meriaux Lucas - étudiant en BTS SIO option SISR</p>
+        </header>
+
+        <div id="navbar">
+            <a href="../index.html">Accueil</a>
+            <a href="profil.html">Profil</a>
+            <a href="#">Documentations</a>
+            <a href="#">Veilles</a>
+            <a class="active" href="contact.html">Contact</a>
+        </div>
+
+        <div class="content">
+            <hr>
+            <h2>Contact</h2>
+            <hr>
+            <div class="text_container">
+                <h3 style="text-align: center;">Informations de contact</h3>
+                <p>mail: lucas.meriaux87@laposte.net</p>
+                <p>tel: 07 -- -- -- 00</p>
+                
+            </div>
+        </div>
+
+        <footer>
+            <div class="foot_container">
+                <a href="#">Mentions légales</a>
+            </div>
+        </footer>
+
+    </body>
+
+    <script>
+        window.onscroll = function() {myFunction()};
+
+        var navbar = document.getElementById("navbar");
+        var sticky = navbar.offsetTop;
+
+        function myFunction() {
+            if (window.pageYOffset >= sticky) {navbar.classList.add("sticky")} else {navbar.classList.remove("sticky")}
+        }
+    </script>
+
+</html>

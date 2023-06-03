@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Portfolio - Meriaux Lucas</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../style.css">
+    </head>
+
+    <body>
+
+        <header>
+            <h1>Portfolio</h1>
+            <p>Meriaux Lucas - étudiant en BTS SIO option SISR</p>
+        </header>
+
+        <div id="navbar">
+            <a href="../index.html">Accueil</a>
+            <a class="active" href="profil.html">Profil</a>
+            <a href="#">Documentations</a>
+            <a href="#">Veilles</a>
+            <a href="contact.html">Contact</a>
+        </div>
+
+        <div class="content">
+            <hr>
+            <h2>Profil</h2>
+            <hr>
+            <div class="text_container">
+                
+                <p>Je m'appelle <b>Meriaux Lucas</b>. Je suis actuellement étudiant en deuxième année de <b>BTS SIO</b> (<b>S</b>ervice <b>I</b>nformatique aux <b>O</b>rganisations) option <b>SISR</b> (<b>S</b>olutions d'<b>I</b>nfrastructure, <b>S</b>ystèmes et <b>R</b>éseaux) au sein de la cité scolaire Jamot-Jaurès à Aubusson.</p>
+                
+                <h3>Compétences</h3>
+                <p>
+                    Utilisation courante des logiciels suivants:
+                    <ul class="noDecoration">
+                        <li>Packet Tracer</li>
+                        <li>Visual Studio Code</li>
+                        <li>Libre office</li>
+                        <li>Oracle VM Virtualbox</li>
+                        <li>Proxmox Virtual Environment</li>
+                    </ul>
+                </p>
+
+                <p>Utilisation et configuration des systèmes d'exploitation Windows et Linux.</p>
+
+                <h3>Formations</h3>
+                <h4>Scolaire</h4>
+                <ul class="noDecoration">
+                    <li>2022 / 2023 - BTS SIO option SISR (en cours)</li>
+                    <ul class="noDecoration">
+                        <li>BTS Services Informatiques aux Organisations option Solutions d'Infrastructures Systèmes et Réseaux</li>
+                        <li>Au sein de la cité scolaire Jamot-Jaurès à Aubusson.</li>
+                    </ul>
+                </ul>
+
+                <ul class="noDecoration">
+                    <li>2021 - BAC SN - mention bien</li>
+                    <ul class="noDecoration">
+                        <li>option RISC: Réseaux Informatiques et Systèmes Communicants</li>
+                        <li>Effectuée au sein du lycée Maryse Bastié à Limoges.</li>
+                    </ul>
+                </ul>
+
+                <h4>Extra-scolaire</h4>
+                <ul class="noDecoration">
+                    <li>ANSSI - Mooc ANSSI</li>
+                </ul>
+
+                <ul class="noDecoration">
+                    <li>Cisco - Certification Cisco IT</li>
+                </ul>
+
+                <h3>Expérience professionnelle</h3>
+                <ul class="noDecoration">
+                    <li>Janvier 2023 - Gendarmerie nationale, brigade de Guérêt</li>
+                    <ul class="noDecoration">
+                        <li>Stage au sein de la section SOLC de la brigade de gendarmerie de Guérêt.</li>
+                    </ul>
+                </ul>
+                <ul class="noDecoration">
+                    <li>Juin 2022 - Xefi Guérêt</li>
+                    <ul class="noDecoration">
+                        <li>Stage au sein du service technique de Xefi Guérêt.</li>
+                    </ul>
+                </ul>
+
+                <ul class="noDecoration">
+                    <li>Janvier/Février 2021 - 3SI à Guérêt</li>
+                    <ul class="noDecoration">
+                        <li>Stage au sein du service technique de 3SI Guérêt.</li>
+                    </ul>
+                </ul>
+
+                <h3>Centres d'intérêt</h3>
+            </div>            
+        </div>
+
+        <footer>
+            <div class="foot_container">
+                <a href="#">Mentions légales</a>
+            </div>
+        </footer>
+
+    </body>
+
+    <script>
+        window.onscroll = function() {myFunction()};
+
+        var navbar = document.getElementById("navbar");
+        var sticky = navbar.offsetTop;
+
+        function myFunction() {
+            if (window.pageYOffset >= sticky) {navbar.classList.add("sticky")} else {navbar.classList.remove("sticky")}
+        }
+    </script>
+
+</html>

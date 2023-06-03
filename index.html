@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Portfolio - Meriaux Lucas</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+
+        <header>
+            <h1>Portfolio</h1>
+            <p>Meriaux Lucas - étudiant en BTS SIO option SISR</p>
+        </header>
+
+        <div id="navbar">
+            <a class="active" href="index.html">Accueil</a>
+            <a href="pages/profil.html">Profil</a>
+            <a href="#">Documentations</a>
+            <a href="#">Situations</a>
+            <a href="#">Veilles</a>
+            <a href="pages/contact.html">Contact</a>
+        </div>
+
+        <div class="content">
+            <hr>
+            <h2>Accueil</h2>
+            <hr>
+            <div class="text_container">
+                <h3 style="text-align: center;">Bienvenue sur mon Portfolio</h3>
+
+                <h4 style="text-align: center;">Présentation</h4>
+                    <p>Je m'appelle <b>Meriaux Lucas</b>. Je suis actuellement étudiant en deuxième année de <b>BTS SIO</b> (<b>S</b>ervice <b>I</b>nformatique aux <b>O</b>rganisations) option <b>SISR</b> (<b>S</b>olutions d'<b>I</b>nfrastructure, <b>S</b>ystèmes et <b>R</b>éseaux) au sein de la cité scolaire Jamot-Jaurès à Aubusson</p>
+
+                <h4 style="text-align: center;">Le BTS</h4>
+                    <p>Le BTS Services Informatiques aux Organisations (SIO) remplace le BTS Informatique de Gestion (IG). Il forme les étudiants à la mise en place de solutions informatiques au sein des organisations et est divisé en deux options: l'option SISR (Solutions d'Infrastructures Systèmes et Réseaux) et l'option SLAM (Solutions Logicielles et Applications Métiers).</p>
+                    <table class="center">
+                        <tr>
+                            <th>
+                                <p>SISR</p>
+                            </th>
+                            <th>
+                                <p>SLAM</p>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>Le BTS SIO SISR permet d'acquérir des compétences en production et maintenance de solutions d'infrastructure réseaux en assurant le fonctionnement optimal des équipement connectés.</p>
+                                <p>Des compétences en cybersécurité sont également nécessaires pour sécuriser les différentes sections d'un réseau informatiques ainsi que les équipements qui y sont connectés</p>
+                            </td>
+                            <td>
+                                <p>Le BTS SIO SLAM se concentre sur la conception et le développement de logiciels et application métiers pour répondre aux besoins des entreprises. Les étudiants apprennent à concevoir des logiciels, à développer et à les tester, en utilisant des langages de programmation tels que Java, C#, PHP, HTML - CSS, etc.</p>
+                            </td>
+                        </tr>
+                    </table>
+            </div>
+        </div>
+
+        <footer>
+            <div class="foot_container">
+                <a href="#">Mentions légales</a>
+            </div>
+        </footer>
+
+    </body>
+
+    <script>
+        window.onscroll = function() {myFunction()};
+
+        var navbar = document.getElementById("navbar");
+        var sticky = navbar.offsetTop;
+
+        function myFunction() {
+            if (window.pageYOffset >= sticky) {navbar.classList.add("sticky")} else {navbar.classList.remove("sticky")}
+        }
+    </script>
+
+</html>
