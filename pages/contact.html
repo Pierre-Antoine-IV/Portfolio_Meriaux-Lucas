@@ -27,10 +27,26 @@
             <h2>Contact</h2>
             <hr>
             <div class="text_container">
-                <h3 style="text-align: center;">Informations de contact</h3>
-                <p>mail: lucas.meriaux87@laposte.net</p>
-                <p>tel: 07 -- -- -- 00</p>
-                
+                <h3 style="text-align: center;">Formulaire de contact</h3>
+                <div class="formContainer">
+                    <form target="_blank" action="https://formsubmit.co/lucas.meriaux87@laposte.net" method="POST">
+                        <div>
+                                <div>
+                                    <label for="name">Nom</label>
+                                    <input type="text" id="name" name="name" placeholder="Nom" required>
+                                </div>
+                                <div>
+                                    <label for="email">Mail</label>
+                                    <input type="email" id="email" name="email" placeholder="Adresse mail" required>
+                                </div>
+                        </div>
+                        <div>
+                            <label for="message">Message</label>
+                            <textarea placeholder="Votre message" id="message" name="message" rows="10" required></textarea>
+                        </div>
+                        <button type="submit">Envoyer</button>
+                    </form>
+                </div>
             </div>
         </div>
 
