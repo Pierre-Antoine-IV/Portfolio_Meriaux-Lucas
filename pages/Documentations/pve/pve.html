@@ -24,10 +24,100 @@
 
         <div class="content">
             <hr>
-            <h2>Mise en place d'un serveur Proxmox Virtual Environment</h2>
+            <h2>Mise en place d'un serveur Proxmox-VE</h2>
             <hr>
             <div class="text_container">
-                <h3>PVE</h3>
+                <h3>Qu'est ce que Proxmox-VE</h3>
+                    <p>
+                        <strong>Proxmox Virtual Environment</strong> est une solution basée sur l'hyperviseur Linux KVM, et offre aussi une solution de conteneurs avec LXC. Elle propose aussi un support payant. <br> Elle est fournie avec un packaging par Proxmox Server Solutions GmbH. <br> Proxmox est une solution de virtualisation de type ”bare metal”. C'est à dire que Proxmox-VE s'exécute directement sur une plateforme matérielle.
+                    </p>
+                    <h4>Linux KVM</h4>
+                        <p>
+                            <strong>KVM (Kernel-based Virtual Machine)</strong> est un hyperviseur de type 1 pour Linux. KVM est intégré dans le noyau Linux depuis la version 2.6.20. Il fonctionne originellement sur les processeurs à architectures x86 disposant des instructions de Virtualisation Intel VT ou AMD-V. Depuis, KVM a été porté pour les architectures Power PC, IA-64 ainsi qu ARM depuis le noyau Linux 3.9.
+                        </p>
+                    <h4>LXC</h4>
+                        <p>
+                            <strong>LXC (Linux Containers)</strong> est un système de virtualisation, utilisant l'isolation comme méthode de cloisonnement au niveau du sytème d'exploitation. Il est utilisé pour faire fonctionner des environments Linux isolé les uns des autres dans des conteneurs, partageant le même noyau et une plus ou moins grande partie du système hôte.
+                        </p>
+                    <h4>Proxmox Server Solution GmbH</h4>
+                        <p>
+                            Proxmox en tant que compagnie, à été fondée en 2005 par Martin Maurer et Dietmar Maurer. <br> GmbH veut dire "Gesellschaft mit beschränkter Haftung" (en français: "société à responsabilité limitée"), c'est une forme de personne morale à responsabilité limitée existant dans le droit des affaires allemand depuis 1892.
+                        </p>
+                
+                <h3>Mise en place de Proxmox-VE sur Debian 11</h3>
+                    <h4>Prérequis</h4>
+                        <p>Configurez votre machine Debian en adressage statique</p>
+                        <p>Ensuite, éditez le fichier <em>/etc/hosts</em> pour que le nom de votre machine soit résolvable via <em>/etc/hosts</em>.</p>
+                        <p>Voici un exemple, si l'adresse est "192.168.10.250", et que le nom d'hôte est "<strong>debian-proxmox</strong>", votre fichier <em>/etc/hosts</em> doit ressembler à :</p>
+                        <figure>
+                            <img src="pictures/pve-1.PNG" alt="">
+                            <figcaption>exemple de fichier <em>/etc/hosts</em></figcaption>
+                        </figure>
+                        <p>Pour tester si votre configuration est bonne, utilisez la commande <em>hostname</em> ci-après. Si la configuration est bonne, elle doit afficher l'adresse IP de Debian.</p>
+                        <table>
+                            <td>hostname --ip-address</td>
+                        </table>
+
+                    <h4>Installation de Proxmox-VE</h4>
+                        <h5>Ajout du dépôt</h5>
+                            <p>Ajouter le dépôt Proxmox-VE:</p>
+                            <table>
+                                <td>deb [arch=amd64] http://download.proxmox.com/debian/pve bullseye pve-no-subscription</td>
+                            </table>
+                            <p>Le fichier <em>/etc/apt/sources.list</em> devra ressembler à ceci.</p>
+                            <figure>
+                                <img src="pictures/pve-2.PNG" alt="">
+                                <figcaption>exemple de fichier <em>/etc/apt/sources.list</em></figcaption>
+                            </figure>
+                            <p>Ajoutez la clef du dépôt Proxmox-VE:</p>
+                            <table>
+                                <td>wget https://enterprise.proxmox.com/debian/proxmox-release-bullseye.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bullseye.gpg</td>
+                            </table>
+                            <p>Mettez à jour tout votre système:</p>
+                            <table>
+                                <td>apt update && apt full-upgrade</td>
+                            </table>
+                        <h5>Installation des paquets</h5>
+                            <p>Pour installer les paquets de Proxmox-VE, utilisez la commande suivante:</p>
+                            <table>
+                                <td>apt isntall proxmox-ve postfix open-isci</td>
+                            </table>
+                            <p>
+                                Si vous avez un serveur de messagerie, vous devriez configurer "postfix" en tant que "<strong>satellite system</strong>". Le serveur de mail va alors être le <em>relay host</em>, il enverra les mails envoyé par Proxmox-VE vers leur destination finale. <br> Si vous ne savez pas quoi sélectionner, choisissez "<strong>local only</strong>". <br> Une fois l'installation faite, redémarrez votre système. <br> Proxmox-VE dispose de son propre noyaux, donc pour éviter les conflits avec le noyaux par défaut de Debian, retirez le noyaux de Debian.
+                            </p>
+                            <table>
+                                <td>apt remove linux-image-amd 'linux-image-5.10'</td>
+                            </table>
+                            <p>Puis mettez à jour le grub avec:</p>
+                            <table><td>update-grub</td></table>
+                            <p>
+                                Le paquet "<strong>os-prober</strong>" scanne toutes les partitions et crée des entrées multi-boot. Les partitions des machines virtuelles font aussi partit des partitions scannées, elle n'ont dont pas besoin d'entrées boot. <br> Si Proxmox-VE n'a pas été installé en dual-boot à coté d'un autres système d'exploitation, vous pouvez retirer le paquet "<strong>os-prober</strong>". Pour retirer, utilisez la commande:
+                            </p>
+                            <table><td>apt remove os-prober</td></table>
+                    <h4>Connexion à l'interface web de Proxmox-VE</h4>
+                            <p>Pour se connecter à l'interface web de Proxmox-VE, utilisez:</p>
+                            <table><td>https://[ip_proxmox]:8006/</td></table>
+                            <p>Une fois sur la page de connexion, si vous n'avez pas créé de comptes utilisateurs, sélectionnez "<strong>Linux PAM standard authentication</strong>", puis entrez vos identifiants et cliquez sur <strong>login</strong>.</p>
+                    <h4>Création d'un pont</h4>
+                        <p>Pour que les VMs puissent se connecter à internet, vous devez créer un pont.</p>
+                        <p>Pour ce faire, sélectionner, la "Node" ayant le nom de votre server puis, allez dans "System > Network".</p>
+                        <figure>
+                            <img src="pictures/pve-3.PNG" alt="">
+                            <figcaption>Menu de l'interface graphique de Proxmox-VE</figcaption>
+                        </figure>
+                        <p>Sélectionnez "Create > Linux Bridge".</p>
+                        <p>Vous allez arriver sur un formulaire qu'il vous faudra compléter. Voici un exemple:</p>
+                        <figure>
+                            <img src="pictures/pve-4.PNG" alt="">
+                            <figcaption>Exemple du formulaire après remplissage</figcaption>
+                        </figure>
+                <h3>Sources</h3>
+                    <p><a href="https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_11_Bullseye">https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_11_Bullseye</a></p>
+                    <p><a href="https://fr.wikipedia.org/wiki/Gesellschaft_mit_beschr%C3%A4nkter_Haftung">https://fr.wikipedia.org/wiki/Gesellschaft_mit_beschr%C3%A4nkter_Haftung</a></p>
+                    <p><a href="https://www.proxmox.com/en/about">https://www.proxmox.com/en/about</a></p>
+                    <p><a href="https://fr.wikipedia.org/wiki/LXC">https://fr.wikipedia.org/wiki/LXC</a></p>
+                    <p><a href="https://fr.wikipedia.org/wiki/Kernel-based_Virtual_Machine">https://fr.wikipedia.org/wiki/Kernel-based_Virtual_Machine</a></p>
+                    <p><a href="https://fr.wikipedia.org/wiki/Proxmox_VE">https://fr.wikipedia.org/wiki/Proxmox_VE</a></p>
             </div>            
         </div>
 
@@ -65,11 +155,16 @@
 
         figure {
             width: 50%;
+            padding-left: 30px;
         }
 
         figcaption {
             text-align: center;
             font-size: large;
+        }
+
+        p {
+            padding-left: 30px;
         }
     </style>
 
