@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Portfolio - Meriaux Lucas</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../style.css">
+    </head>
+
+    <body>
+
+        <header>
+            <h1>Portfolio</h1>
+            <p>Meriaux Lucas - étudiant en BTS SIO option SISR</p>
+        </header>
+
+        <div id="navbar">
+            <a href="../index.html">Accueil</a>
+            <a href="profil.html">Profil</a>
+            <a href="situations.html">Situations</a>
+            <a href="Documentations/documentation.html">Documentations</a>
+            <a href="#">Veilles</a>
+            <a href="contact.html">Contact</a>
+        </div>
+
+        <div class="content">
+            <hr>
+            <h2>Mentions Légales</h2>
+            <hr>
+            <div class="text_container">
+                <h3>Site Web</h3>
+                <p>https://github.com/Pierre-Antoine-IV/Portfolio_Meriaux-Lucas</p>
+                <h3>Editeur, responsable de publication/contenu</h3>
+                <p>Meriaux Lucas</p>
+                <h3>Hébergeur</h3>
+                <p>Github</p>
+                <h3>Cookies</h3>
+                <p>Ce site web ne nécessite pas l'utilisation des cookies.</p>
+                <p>Mais l'API de Formsubmit utilise les cookies. Pour plus de renseignement, rendez-vous à cette <a href="https://formsubmit.co/privacy.pdf">page</a>.</p>
+            </div>            
+        </div>
+
+        <footer>
+            <div class="foot_container" style="text-align: center;">
+                <a href="mentions_legales.html">Mentions légales</a>
+            </div>
+        </footer>
+
+    </body>
+
+    <script>
+        window.onscroll = function() {myFunction()};
+
+        var navbar = document.getElementById("navbar");
+        var sticky = navbar.offsetTop;
+
+        function myFunction() {
+            if (window.pageYOffset >= sticky) {navbar.classList.add("sticky")} else {navbar.classList.remove("sticky")}
+        }
+    </script>
+
+    <style>
+        p {
+            text-align: center;
+        }
+    </style>
+
+</html>

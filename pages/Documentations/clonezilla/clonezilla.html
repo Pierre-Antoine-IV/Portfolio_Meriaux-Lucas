@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Portfolio - Meriaux Lucas</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../../../style.css">
+    </head>
+
+    <body>
+
+        <header>
+            <h1>Portfolio</h1>
+            <p>Meriaux Lucas - étudiant en BTS SIO option SISR</p>
+        </header>
+
+        <div id="navbar">
+            <a href="../../../index.html">Accueil</a>
+            <a href="../../profil.html">Profil</a>
+            <a href="../../situations.html">Situations</a>
+            <a href="../documentation.html">Documentations</a>
+            <a href="#">Veilles</a>
+            <a href="../../contact.html">Contact</a>
+        </div>
+
+        <div class="content">
+            <hr>
+            <h2>Mise en place d'un serveur Clonezilla sur Debian</h2>
+            <hr>
+            <div class="text_container">
+                <h3>Table des matières</h3>
+                <p>bla bla</p>
+
+                <h3>Qu'est ce que Clonezilla SE</h3>
+                    <h4>Clonezilla</h4>
+                        <p>Clonezilla est un logiciel de restauration de données, de clonage de disque, et de création d'image de disque. Il a été créé par <strong>Steven Shiau</strong> et maintenu par le laboratoire de recherche Taïwanais <strong>NCHC</strong> (<strong>N</strong>ational <strong>C</strong>enter <strong>H</strong>igh-performance <strong>C</strong>omputing).</p>
+                        <p>Son système est basé sur les logiciels <strong>DRBL</strong> (<strong>D</strong>iskless <strong>R</strong>emote <strong>B</strong>oot <strong>L</strong>inux, en français: "amorçage à disqtance sans disque dans linux")</p>
+                        <p>Il supporte la copie d'un poste vers un autre (unicast), ainsi que celle d'un serveur vers plusieurs postes (multicast).</p>
+                    <h4>Clonezilla Live</h4>
+                        <p>
+                            Clonezilla Live est un Live CD basé sur la distribution Debian GNU/Linux et contenant le logiciel Clonezilla. Il permet à l'utilisateur d'effectuer, directement depuis la machine:
+                            <ul>
+                                <li>une sauvegarde : copie du disque entier, ou d'une ou plusieurs partitions, sous forme d'une image envoyée vers tout moyen de stockage</li>
+                                <li>une restauration : récupération d'une image depuis son point de stockage (même disque, autre disque, autre machine, clé USB, réseau, etc.)</li>
+                                <li>une copie : copie directe des données depuis le disque original vers un autre disque</li>
+                            </ul>
+                        </p>
+                        <p>Comme précisé dans son nom, le principe est celui du Live CD (CD-ROM ou DVD-ROM), mais il peut aussi être exécuté depuis une clé USB, un disque dur externe, etc.</p>
+                    <h4>Clonezilla Server</h4>
+                        <p>Clonezilla Server (ou Clonezilla SE) est utilisé depuis un serveur et autorise plusieurs postes à se connecter simultanément par l'intermédiaire d'un réseau commun. Un serveur DRBL est utilisé et cela permet aux stations esclaves concernées d'effectuer un démarrage PXE, cela n'obligeant pas à passer par Clonezilla-Live.</p>
+                    <h4>Qans quel but utiliser un serveur Clonezilla</h4>
+                        <p>Un serveur Clonezilla permet de créer des images de sauvegarde d'un disque dur ou d'une ou plusieurs partitions ainsi que de les restaurer en passant par le réseau.
+                            Les clients démarre en "PXE over IPv4" puis charge l'outil Clonezilla-live qui leur est délivré par le serveur par le réseau.</p>
+
+                <h3>Mise en place de Clonezilla SE sur Debian</h3>
+                    <h4>Prérequis</h4>
+                        <p>La machine doit fonctionner sous Debian. <br> Pour mettre en place un serveur Clonezilla, il faut une machine disposant de deux interfaces réseaux.</p>
+                        <h5>Réseau</h5>
+                            <p>Les deux interfaces du serveur son en adressage statique. La primaire sert à avoir une connexion à internet, elle se trouve dans un réseau différents de celui sur lequel Clonezilla va opéré. <br> L'autre interface se trouve un dans un réseau différent de celui de l'interface primaire.</p>
+                            <figure>
+                                <img src="pictures/network-interfaces.PNG" alt="">
+                                <figcaption>Exemple de fichier <em>/etc/network/interfaces</em></figcaption>
+                            </figure>
+                            <p>Redémarrez la machine pour appliquer les modifications.</p>
+                        <h5>Paquets requis</h5>
+                            <p>Installer les paquets requis:</p>
+                            <table>
+                                <td><em>apt install rsync gawk gnupg curl</em></td>
+                            </table>
+                    <h4>Mise en place du serveur DRBL</h4>
+                        <h5>Installation des paquets DRBL</h5>
+                            <p>Ajoutez les clefs DRBL:</p>
+                            <table>
+                                <td><em>curl -s https://drbl.org/GPG-KEY-DRBL | gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/GPG-KEY-DRBL.gpg --import</em></td>
+                            </table>
+                            <table>
+                                <td><em>chmod 644 /etc/apt/trusted.gpg.d/GPG-KEY-DRBL.gpg</em></td>
+                            </table>
+                            <p>Ajouter le dépôt DRBL à <em>sources.list</em></p>
+                            <figure>
+                                <img src="pictures/sourcesList.PNG" alt="">
+                                <figcaption>Exemple de fichier <em>/etc/apt/sources.list</em></figcaption>
+                            </figure>
+                            <p>Maintenant installez le paquet DRBL</p>
+                            <table>
+                                <td><em>apt install drbl <br> apt update</em></td>
+                            </table>
+                            <p>Activez la compatibilité <em>secure boot</em> en éditant le fichier <em>/etc/drbl/drbl.conf</em> à la ligne présente sur l'image ci-dessous.</p>
+                            <figure>
+                                <img src="pictures/securebootyes.PNG" alt="">
+                                <figcaption>La ligne à modifier</figcaption>
+                            </figure>
+                        <h5>Installation du serveur DRBL</h5>
+                            <p>Pour installer le serveur DRBL, entrez la commande suivante:</p>
+                            <table>
+                                <td><em>/usr/sbin/drblsrv -i</em></td>
+                            </table>
+                            <p>Après avoir entré la commande, le serveur va poser quelques questions.</p>
+                            <figure>
+                                <img src="pictures/drblsrv-i-1.PNG" alt="">
+                                <figcaption>Etape 1</figcaption>
+                            </figure>
+                            <p>Prenez le paramètres par défaut, appuyez sur ENTER.</p>
+                            <figure>
+                                <img src="pictures/drblsrv-i-2.PNG" alt="">
+                                <figcaption>Etape 2</figcaption>
+                            </figure>
+                            <p>Prenez le paramètres par défaut, appuyez sur ENTER.</p>
+                            <figure>
+                                <img src="pictures/drblsrv-i-3.PNG" alt="">
+                                <figcaption>Etape 3</figcaption>
+                            </figure>
+                            <p>Faites comme bon vous semble, "y" pour mettre à jour votre système d'exploitation, "n" pour ne pas le faire.</p>
+                            <figure>
+                                <img src="pictures/drblsrv-i-4.PNG" alt="">
+                                <figcaption>Etape 4</figcaption>
+                            </figure>
+                            <p>Ce qui est encadré est l'option par défaut. Sélectionnez le kernel du dépôt APT en écrivant "2".</p>
+                        <h5>configuration du serveur DRBL</h5>
+                            <p>Pour configurer le serveur DRBL, utilisez la commande:</p>
+                            <table>
+                                <td><em>/usr/sbin/drblpush -i</em></td>
+                            </table>
+                            <p>!: quand dans la documentation, il n'y a pas d'images de l'étape, appuyez sur ENTER.</p>
+                            <figure>
+                                <img src="pictures/DNS.PNG" alt="">
+                                <figcaption>Etape 1</figcaption>
+                            </figure>
+                            <p>Entrez l'adresse IP ou le nom de votre serveur DNS ou prenez le DNS par défaut.</p>
+                            <figure>
+                                <img src="pictures/domaine.PNG" alt="">
+                                <figure>Etape 2</figure>
+                            </figure>
+                            <p>Entrez le nom de votre domaine.</p>
+                            <figure>
+                                <img src="pictures/prefixe.PNG" alt="">
+                                <figcaption>Etape 3</figcaption>
+                            </figure>
+                            <p>Entrez le préfixe de nom d'hôtes des clients. Cela est utile lors de la création automatique des noms d'hôtes des clients.</p>
+                            <figure>
+                                <img src="pictures/drblpush-i-4.PNG" alt="">
+                                <figcaption>Etape 4</figcaption>
+                            </figure>
+                            <p>Choisissez quelle est l'interface connectée à internet. Pour la choisir, écrivez son nom.</p>
+                            <figure>
+                                <img src="pictures/debut-pool.PNG" alt="">
+                                <figcaption>Etape 5</figcaption>
+                            </figure>
+                            <p>Entrez la première adresse du pool d'adresses destiné aux clients.</p>
+                            <figure>
+                                <img src="pictures/drblpush-i-8.PNG" alt="">
+                                <figcaption>Etape 6</figcaption>
+                            </figure>
+                            <p>Entrez le nombre de clients qui seront connectés au serveur DRBL.</p>
+                            <figure>
+                                <img src="pictures/drblpush-i-9.PNG" alt="">
+                                <figcaption>Etape 7</figcaption>
+                            </figure>
+                            <p>C'est un aperçu de la configuration des interfaces réseau de la machines ainsi que du pool du serveur DHCP destiné au machine qui seront connecté au serveur DRBL.</p>
+                            <figure>
+                                <img src="pictures/drblpush-i-10.PNG" alt="">
+                                <figcaption>Etape 8</figcaption>
+                            </figure>
+                            <p>Ne fournissez pas de service "diskless linux" au client, sélectionnez "2".</p>
+                            <figure>
+                                <img src="pictures/drblpush-i-11.PNG" alt="">
+                                <figcaption>Etape 9</figcaption>
+                            </figure>
+                            <p>Pour utiliser Clonezilla-live en tant de système d'exploitation des clients. Sélectionnez "3".</p>
+                            <figure>
+                                <img src="pictures/drblpush-i-12.PNG" alt="">
+                                <figcaption>Etape 10</figcaption>
+                            </figure>
+                            <p>Pour utiliser la branche de développement "stable (base Ubuntu)" de Clonezilla, sélectionnez 2.</p>
+                            <figure>
+                                <img src="pictures/drblpush-i-14.PNG" alt="">
+                                <figcaption>Etape 11</figcaption>
+                            </figure>
+                            <p>Le serveur demande où doit-il stocker les images. Le répertoire par défaut \textit{/home/partimag/} convient. Appuyez sur ENTER.</p>
+                            <figure>
+                                <img src="pictures/drblpush-i-17.PNG" alt="">
+                                <figcaption>Etape 12</figcaption>
+                            </figure>
+                            <p>Choisissez la temporisation du prompt.</p>
+                        <h5>Démarrage de Clonezilla</h5>
+                            <p>Pour démarrer Clonezilla, utilisez la commande:</p>
+                            <table>
+                                <td><em>/usr/sbin/dcs</em></td>
+                            </table>
+                            <figure>
+                                <img src="pictures/dcs-1.PNG" alt="">
+                                <figcaption>Etape 1</figcaption>
+                            </figure>
+                            <p>Sélectionnez "<strong>All</strong>".</p>
+                            <figure>
+                                <img src="pictures/dcs-2.PNG" alt="">
+                                <figcaption>Etape 2</figcaption>
+                            </figure>
+                            <p>Sélectionnez "<strong>Clonezilla-start</strong>".</p>
+                            <figure>
+                                <img src="pictures/dcs-3.PNG" alt="">
+                                <figcaption>Etape 3</figcaption>
+                            </figure>
+                            <p>Sélectionnez "<strong>Beginner</strong>".</p>
+                            <figure>
+                                <img src="pictures/dcs-4.PNG" alt="">
+                                <figcaption>Etape 4</figcaption>
+                            </figure>
+                            <p>Sélectionnez "<strong>Select in client</strong>".</p>
+                            <figure>
+                                <img src="pictures/dcs-5.PNG" alt="">
+                                <figcaption>Etape 5</figcaption>
+                            </figure>
+                            <p>Sélectionnez "<strong>-y1</strong>".</p>
+                            <figure>
+                                <img src="pictures/dcs-6.PNG" alt="">
+                                <figcaption>Etape 6</figcaption>
+                            </figure>
+                            <p>Sélectionnez "<strong>-p choose</strong>".</p>
+
+                
+                <h3>Fonctionnement</h3>
+                    <h4>Connexion du client au serveur</h4>
+                        <p>
+                            Pour que le client se connecte au serveur, il faut qu'il soit connecté au réseau dédié à Clonezilla. Il doit démarrer sur son interface présente sur le réseau dédié à Clonezilla par "PXE over IPv4".
+                        </p>
+                    <h4>Créer une image à partir du disque du client</h4>
+                        <p>Une fois que le client à démarré sur "PXE over IPv4" vous allez arriver sur la page d'accueil.</p>
+                        <figure>
+                            <img src="pictures/clonezilla-1-1.PNG" alt="">
+                            <figcaption>Etape 1</figcaption>
+                        </figure>
+                        <p>Sur cet écran, sélectionnez "<strong>Clonezilla: choose save or restaure later</strong>".</p>
+                        <figure>
+                            <img src="pictures/clonezilla-1-2.PNG" alt="">
+                            <figcaption>Etape 2</figcaption>
+                        </figure>
+                        <p>Puis Choisissez le mode "<strong>device-image</strong>".</p>
+                        <figure>
+                            <img src="pictures/clonezilla-1-3.PNG" alt="">
+                            <figcaption>Etape 3</figcaption>
+                        </figure>
+                        <p>Ensuite, sélectionnez le mode "<strong>beginner</strong>".</p>
+                        <figure>
+                            <img src="pictures/clonezilla-1-4.PNG" alt="">
+                            <figcaption>Etape 4</figcaption>
+                        </figure>
+                        <p>Sélectionnez "<strong>savedisk</strong>".</p>
+                        <figure>
+                            <img src="pictures/clonezilla-1-5.PNG" alt="">
+                            <figcaption>Etape 5</figcaption>
+                        </figure>
+                        <p>Donnez un nom à l'image qui va être créé.</p>
+                        <figure>
+                            <img src="pictures/clonezilla-1-6.PNG" alt="">
+                            <figcaption>Etape 6</figcaption>
+                        </figure>
+                        <p>Sélectionnez le disque à partir duquel l'image va être produite.</p>
+                        <figure>
+                            <img src="pictures/clonezilla-1-7.PNG" alt="">
+                            <figcaption>Etape 7</figcaption>
+                        </figure>
+                        <p>Choisissez l'option de compression.</p>
+                        <figure>
+                            <img src="pictures/clonezilla-1-8.PNG" alt="">
+                            <figcaption>Etape 8</figcaption>
+                        </figure>
+                        <p>Choisissez si vous voulez que les fichiers systèmes soit vérifiés et réparé ou non.</p>
+                        <figure>
+                            <img src="pictures/clonezilla-1-9.PNG" alt="">
+                            <figcaption>Etape 9</figcaption>
+                        </figure>
+                        <p>Choisissez si vous voulez que Clonezilla vérifie que l'image est restaurable ou non.</p>
+                        <figure>
+                            <img src="pictures/clonezilla-1-10.PNG" alt="">
+                            <figcaption>Etape 10</figcaption>
+                        </figure>
+                        <p>
+                            Choisissez de chiffré ou non l'image qui sera produite. <br> Le programme de création de l'image va faire son travail.
+                        </p>
+                        <figure>
+                            <img src="pictures/clonezilla-1-11.PNG" alt="">
+                            <figcaption>Etape 11</figcaption>
+                        </figure>
+                        <p>Une fois le travail effectué, Clonezilla vous proposera diverses options.</p>
+                    <h4>Restaurer une image sur un client</h4>
+                        <figure>
+                            <img src="pictures/clonezilla-2-1.PNG" alt="">
+                            <figcaption>Etape 1</figcaption>
+                        </figure>
+                        <p>Sélectionnez "<strong>Clonezilla: choose save or restore later</strong>".</p>
+                        <figure>
+                            <img src="pictures/clonezilla-2-2.PNG" alt="">
+                            <figcaption>Etape 2</figcaption>
+                        </figure>
+                        <p>Sélectionnez "<strong>device-image</strong>"</p>
+                        <figure>
+                            <img src="pictures/clonezilla-2-3.PNG" alt="">
+                            <figcaption>Etape 3</figcaption>
+                        </figure>
+                        <p>Sélectionnez "<strong>beginner</strong>"</p>
+                        <figure>
+                            <img src="pictures/clonezilla-2-4.PNG" alt="">
+                            <figcaption>Etape 4</figcaption>
+                        </figure>
+                        <p>Sélectionnez "<strong>restore disk</strong>".</p>
+                        <figure>
+                            <img src="pictures/clonezilla-2-5.PNG" alt="">
+                            <figcaption>Etape 5</figcaption>
+                        </figure>
+                        <p>Choisissez l'image que vous souhaitez restaurer.</p>
+                        <figure>
+                            <img src="pictures/clonezilla-2-6.PNG" alt="">
+                            <figcaption>Etape <6/figcaption>
+                        </figure>
+                        <p>Choisissez sur quel disques du client vous souhaitez restaurer l'image.</p>
+                        <figure>
+                            <img src="pictures/clonezilla-2-7.PNG" alt="">
+                            <figcaption>Etape 7</figcaption>
+                        </figure>
+                        <p>Vous pouvez choisir de vérifier l'image avant de la restaurer ou non.</p>
+                        <figure>
+                            <img src="pictures/clonezilla-2-8.PNG" alt="">
+                            <figcaption>Etape 8</figcaption>
+                        </figure>
+                        <p>Une fois la restauration terminée, vous arriverez sur une menu vous proposant diverses options. Faite votre choix selon vos besoin.</p>
+
+                <h3>Notes</h3>
+                            <p>Les images sont stockée sur le serveur dans le répertoire "<em>/home/partimag/</em>".</p>
+
+                <h3>Sources</h3>
+                            <p><a href="https://fr.wikipedia.org/wiki/Clonezilla" target="_blank">https://fr.wikipedia.org/wiki/Clonezilla</a></p>
+                            <p><a href="https://shebangthedolphins.net/gnulinux_clonezilla_drbl.html" target="_blank">https://shebangthedolphins.net/gnulinux_clonezilla_drbl.html</a></p>
+                            <p><a href="https://community.spiceworks.com/how_to/146408-setup-clonezilla-server" target="_blank">https://community.spiceworks.com/how_to/146408-setup-clonezilla-server</a></p>
+                            <p><a href="https://doc.ubuntu-fr.org/clonezilla" target="_blank">https://doc.ubuntu-fr.org/clonezilla</a></p>
+
+            </div>            
+        </div>
+
+        <footer>
+            <div class="foot_container" style="text-align: center;">
+                <a href="../../mentions_legales.html">Mentions légales</a>
+            </div>
+        </footer>
+
+    </body>
+
+    <script>
+        window.onscroll = function() {myFunction()};
+
+        var navbar = document.getElementById("navbar");
+        var sticky = navbar.offsetTop;
+
+        function myFunction() {
+            if (window.pageYOffset >= sticky) {navbar.classList.add("sticky")} else {navbar.classList.remove("sticky")}
+        }
+    </script>
+
+    <style>
+        h3 {
+            text-align: left;
+        }
+
+        h4 {
+            text-align: left;
+        }
+
+        img {
+            width: 100%;
+        }
+
+        figure {
+            width: 50%;
+        }
+
+        figcaption {
+            text-align: center;
+            font-size: large;
+        }
+    </style>
+
+</html>
