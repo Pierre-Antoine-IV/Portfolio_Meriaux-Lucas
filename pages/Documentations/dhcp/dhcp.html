@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Portfolio - Meriaux Lucas</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../../../style.css">
+    </head>
+
+    <body>
+
+        <header>
+            <h1>Portfolio</h1>
+            <p>Meriaux Lucas - étudiant en BTS SIO option SISR</p>
+        </header>
+
+        <div id="navbar">
+            <a href="../../../index.html">Accueil</a>
+            <a href="../../profil.html">Profil</a>
+            <a href="../../situations.html">Situations</a>
+            <a href="../documentation.html">Documentations</a>
+            <a href="../../veille/veille_tech.html">Veille technologique</a>
+            <a href="../../contact.html">Contact</a>
+        </div>
+
+        <div class="content">
+            <hr>
+            <h2>Mise en place d'un serveur DHCP sur Debian</h2>
+            <hr>
+            <div class="text_container">
+                <p>Installez le paquet <em>isc-dhcp-server</em></p>
+                <p>Mettre l'adresse du serveur en statique, ceci s'effectue dans le fichier <em>/etc/network/interfaces</em></p>
+                <p>
+                    Indiquez sur laquelle de ses interface le serveur doit t'il écouter pour recevoir les requêtes dhcp. Ceci se fait dans le fichier <em>/etc/default/isc-dhcp-server</em>
+                    <br>
+                    Modifiez la ligne suivante:
+                </p>
+                <table>
+                    <td>INTERFACESv4="nom_interface"</td>
+                </table>
+
+                <p>
+                    Puis configurez le serveur dhcp dans le fichier <em>/etc/dhcp/dhcpd.conf</em>
+                </p>
+                <p>Créez y un pool (des exemple peuvent être trouvé en commentaire dans le fichier de configuration)</p>
+
+                <p>N'oubliez de déclarer le réseau sur lequel se trouve le serveur, sinon le service dhcp ne fonctionnerra pas.</p>
+
+                <p>Une fois la configuration faites, vous pouvez démarrer le service avec la commande : "<em>systemctl start isc-dhcp-server</em>"</p>
+                
+            </div>            
+        </div>
+
+        <footer>
+            <div class="foot_container" style="text-align: center;">
+                <a href="../../mentions_legales.html">Mentions légales</a>
+            </div>
+        </footer>
+
+    </body>
+
+    <script>
+        window.onscroll = function() {myFunction()};
+
+        var navbar = document.getElementById("navbar");
+        var sticky = navbar.offsetTop;
+
+        function myFunction() {
+            if (window.pageYOffset >= sticky) {navbar.classList.add("sticky")} else {navbar.classList.remove("sticky")}
+        }
+    </script>
+
+    <style>
+        h3 {
+            text-align: left;
+        }
+
+        h4 {
+            text-align: left;
+        }
+
+        img {
+            width: 100%;
+        }
+
+        figure {
+            width: 50%;
+            padding-left: 30px;
+        }
+
+        figcaption {
+            text-align: center;
+            font-size: large;
+        }
+
+        p {
+            padding-left: 30px;
+        }
+    </style>
+
+</html>
